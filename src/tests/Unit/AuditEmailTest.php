@@ -2,7 +2,6 @@
 
 namespace Kali\AuditEmail\Tests;
 
-use Kali\AuditEmail\AuditEmail;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Mail;
 
