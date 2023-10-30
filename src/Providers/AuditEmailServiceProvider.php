@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Kali\AuditEmail\Listeners\StoreSentMailListener;
 
-class EmailAuditServiceProvider extends ServiceProvider
+class AuditEmailServiceProvider extends ServiceProvider
 {
 
     public function boot()
