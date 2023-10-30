@@ -1,0 +1,39 @@
+{
+    "name": "igchebof/kali-audit-email",
+    "description": "Store laravel app generated mail copy to database",
+    "authors": [
+        {
+            "name": "Чеботарь Иван",
+            "email": "422157@kali.by"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Kali\\AuditEmail\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kali\\AuditEmail\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Kali\\AuditEmail\\Providers\\AuditEmailServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {},
+    "require-dev": {
+        "orchestra/testbench": "^7.13",
+        "phpunit/phpunit": "^9.5"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "post-autoload-dump": [
+            "@php vendor/bin/testbench package:discover --ansi"
+        ]
+    }
+}
