@@ -13,5 +13,12 @@ class EmailAudit extends Model
 
     protected $table = 'ac_email_audits';
 
-    protected $guarded = ["id"];
+    protected $fillable = [
+        "from_email",
+        "to_email",
+        "cc",
+        "subject",
+        "body",
+        "app"
+    ];
 }
