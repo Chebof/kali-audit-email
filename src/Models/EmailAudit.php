@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class EmailAudit extends Model
 {
-    protected $connection = config("emailaudit.db_connection");
+    public function __construct()
+    {
+        $this->connection = config("emailaudit.db_connection");
+    }
 
     protected $table = 'ac_email_audits';
 
