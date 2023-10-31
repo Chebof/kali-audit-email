@@ -57,6 +57,6 @@ class StoreSentMailListener
 
     protected function getHtml($message)
     {
-        return $message instanceof Email ? $message->html : (string) $message->getBody();
+        return $message instanceof Email ? $message->getHtmlBody() : (string) $message->getBody();
     }
 }
