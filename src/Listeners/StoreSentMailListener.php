@@ -6,10 +6,13 @@ use Kali\AuditEmail\Models\EmailAudit;
 use Illuminate\Mail\Events\MessageSent;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 
 
-class StoreSentMailListener
+class StoreSentMailListener implements ShouldQueue
 {
+    use InteractsWithQueue;
     /**
      * Create the event listener.
      *
@@ -27,8 +30,10 @@ class StoreSentMailListener
      * @return void
      */
     public function handle(MessageSent $event): void
-    {
+    {   
         $message = $event->message;
+        //if listener use queue, take date from message
+        $sent_time = config("emailaudit.should_queue") ? $message->getDate() : now();
 
         EmailAudit::create([
             "subject" => $message->getSubject(),
@@ -37,9 +42,14 @@ class StoreSentMailListener
             "cc" => $this->getAddressValue($message->getCc()),
             "body" => $this->getHtml($message),
             "app" => config("emailaudit.app_name_field"),
+            "sent_at" => $sent_time,
         ]);
     }
 
+    public function shouldQueue(MessageSent $event): bool
+    {
+        return config("emailaudit.should_queue");
+    }
 
     protected function getAddressValue(array|null $array, $first = false)
     {
@@ -57,6 +67,6 @@ class StoreSentMailListener
 
     protected function getHtml($message)
     {
-        return $message instanceof Email ? $message->getHtmlBody() : (string) $message->getBody();
+        return $message instanceof Email ? $message->getHtmlBody() : (string)$message->getBody();
     }
 }
