@@ -13,7 +13,7 @@ class CreateEmailAuditsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ac_email_audits', function (Blueprint $table)
+        Schema::create(config("emailaudit.table"), function (Blueprint $table)
         {
             $table->id();
 

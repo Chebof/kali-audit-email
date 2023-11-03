@@ -32,8 +32,6 @@ class StoreSentMailListener implements ShouldQueue
     public function handle(MessageSent $event): void
     {   
         $message = $event->message;
-        //if listener use queue, take date from message
-        $sent_time = config("emailaudit.should_queue") ? $message->getDate() : now();
 
         EmailAudit::create([
             "subject" => $message->getSubject(),
@@ -42,7 +40,7 @@ class StoreSentMailListener implements ShouldQueue
             "cc" => $this->getAddressValue($message->getCc()),
             "body" => $this->getHtml($message),
             "app" => config("emailaudit.app_name_field"),
-            "sent_at" => $sent_time,
+            "sent_at" => $message->getDate() ?? now(),
         ]);
     }
 
