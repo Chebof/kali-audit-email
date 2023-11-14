@@ -2,13 +2,14 @@
 
 namespace Kali\AuditEmail\Listeners;
 
+use Kali\AuditEmail\Exceptions\CreateEmailAuditException;
 use Kali\AuditEmail\Models\EmailAudit;
 use Illuminate\Mail\Events\MessageSent;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-
+use Exception;
 
 class StoreSentMailListener implements ShouldQueue
 {
@@ -35,18 +36,25 @@ class StoreSentMailListener implements ShouldQueue
      * @return void
      */
     public function handle(MessageSent $event): void
-    {   
-        $message = $event->message;
+    {
+        try
+        {
+            $message = $event->message;
 
-        EmailAudit::create([
-            "subject" => $message->getSubject(),
-            "to_email" => $this->getAddressValue($message->getTo()),
-            "from_email" => $this->getAddressValue($message->getFrom(), true),
-            "cc" => $this->getAddressValue($message->getCc()),
-            "body" => $this->getHtml($message),
-            "app" => config("emailaudit.app_name_field"),
-            "sent_at" => $message->getDate() ?? now(),
-        ]);
+            EmailAudit::create([
+                "subject" => $message->getSubject(),
+                "to_email" => $this->getAddressValue($message->getTo()),
+                "from_email" => $this->getAddressValue($message->getFrom(), true),
+                "cc" => $this->getAddressValue($message->getCc()),
+                "body" => $this->getHtml($message),
+                "app" => config("emailaudit.app_name_field"),
+                "sent_at" => $message->getDate() ?? now(),
+            ]);
+        }
+        catch (Exception $e)
+        {
+            throw new CreateEmailAuditException("Create email audit error", $e->getCode(), $e);
+        }
     }
 
     protected function getAddressValue(array|null $array, $first = false)
