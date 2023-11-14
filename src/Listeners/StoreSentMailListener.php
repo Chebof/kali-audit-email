@@ -23,6 +23,11 @@ class StoreSentMailListener implements ShouldQueue
         //
     }
 
+    public function viaConnection(): string
+    {
+        return config("emailaudit.should_queue") ? config("emailaudit.queue_connection") : 'sync';
+    }
+
     /**
      * Handle the event.
      *
@@ -42,11 +47,6 @@ class StoreSentMailListener implements ShouldQueue
             "app" => config("emailaudit.app_name_field"),
             "sent_at" => $message->getDate() ?? now(),
         ]);
-    }
-
-    public function shouldQueue(MessageSent $event): bool
-    {
-        return config("emailaudit.should_queue");
     }
 
     protected function getAddressValue(array|null $array, $first = false)
