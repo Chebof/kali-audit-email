@@ -1,0 +1,23 @@
+providers:
+  - Workbench\App\Providers\WorkbenchServiceProvider
+
+migrations:
+  - workbench/database/migrations
+  # - database/migrations
+
+seeders:
+  - Workbench\Database\Seeders\DatabaseSeeder
+
+workbench:
+  start: '/'
+  install: true
+  laravel: './skeleton'
+  discovers:
+    web: true
+    api: false
+    commands: false
+    views: false
+  build:
+    - create-sqlite-db
+  assets: []
+  sync: []
